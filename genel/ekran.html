@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sıramatik Ekranı</title>
+<link rel="stylesheet" href="/ekran.css">
+</head>
+<body>
+<div id="sahne">
+  <div class="arka-isik"></div>
+
+  <header class="ust">
+    <div class="marka">
+      <div class="logo">S</div>
+      <div>
+        <div id="isletme" class="isletme">Sıramatik</div>
+        <div id="alt-baslik" class="alt-baslik">Sıra Takip Sistemi</div>
+      </div>
+    </div>
+    <div class="saat-kutu">
+      <div id="saat" class="saat">00:00</div>
+      <div id="tarih" class="tarih"></div>
+    </div>
+  </header>
+
+  <main class="orta">
+    <section id="cagri" class="cagri">
+      <div id="parilti" class="parilti"></div>
+      <div class="etiket">SIRADAKİ NUMARA</div>
+      <div id="numara" class="numara">—</div>
+      <div id="hedef" class="hedef">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h14M12 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span id="hedef-gise">Hoş geldiniz</span>
+      </div>
+      <div id="hizmet-ad" class="hizmet-ad"></div>
+    </section>
+
+    <section class="gecmis">
+      <div class="gecmis-baslik"><span>Numara</span><span>Gişe</span></div>
+      <div id="gecmis-liste" class="gecmis-liste"></div>
+    </section>
+  </main>
+
+  <section class="alt">
+    <div id="giseler" class="giseler"></div>
+    <div class="bekleyen">
+      <div class="bekleyen-baslik">BEKLEYEN</div>
+      <div id="bekleyen-liste"></div>
+    </div>
+  </section>
+
+  <footer id="kayan" class="kayan"><div id="kayan-ic" class="kayan-ic"></div></footer>
+
+  <!-- katmanlar -->
+  <div id="baglanti" class="baglanti gizli">Sunucu bağlantısı yok — yeniden deneniyor…</div>
+  <div id="ses-uyari" class="ses-uyari gizli">Anons sesini açmak için kumandadan <b>OK</b> tuşuna basın</div>
+  <div id="bildirim" class="bildirim gizli"></div>
+
+  <div id="kumanda" class="kumanda gizli">
+    <div class="k-baslik">KUMANDA İLE KONTROL</div>
+    <div class="k-gise"><span class="k-ok">&#9650;</span><span id="k-gise-ad">—</span><span class="k-ok">&#9660;</span></div>
+    <div class="k-aktif">Şu an: <b id="k-aktif">—</b></div>
+    <ul class="k-tuslar">
+      <li><span class="tus">OK</span> Sıradaki numarayı çağır</li>
+      <li><span class="tus">&#9664;</span> Tekrar çağır</li>
+      <li><span class="tus">1–9</span> Gişe seç</li>
+      <li><span class="tus sari">Sarı</span> Sesi aç / kapat</li>
+      <li><span class="tus mavi">Mavi</span> Yardım ve adresler</li>
+    </ul>
+  </div>
+
+  <div id="bilgi" class="bilgi gizli">
+    <div class="bilgi-kutu">
+      <h2 id="bilgi-baslik">Sıramatik — Yardım</h2>
+      <div id="bilgi-adresler">
+        <p>Bilgisayardan kontrol etmek için aynı ağdaki bir tarayıcıda açın:</p>
+        <div class="adres" id="adres-panel">—</div>
+        <p>Numara alma (tablet / kiosk) sayfası:</p>
+        <div class="adres" id="adres-bilet">—</div>
+      </div>
+      <div id="sunucu-ayari" class="gizli">
+        <p>Sıramatik sunucusunun adresi (bilgisayardaki pencerede yazar):</p>
+        <input id="sunucu-girdi" type="text" placeholder="192.168.1.20:8080" autocomplete="off" spellcheck="false">
+        <p class="kucuk">Yazdıktan sonra <b>OK / Enter</b> ile kaydedin.</p>
+      </div>
+      <ul class="k-tuslar genis">
+        <li><span class="tus">OK</span> Kumanda menüsünü aç, ardından sıradakini çağır</li>
+        <li><span class="tus">&#9650; &#9660;</span> Gişe değiştir</li>
+        <li><span class="tus yesil">Yeşil</span> Doğrudan sıradakini çağır</li>
+        <li><span class="tus kirmizi">Kırmızı</span> Son numarayı tekrar çağır</li>
+        <li><span class="tus">Geri</span> Bu pencereyi kapat</li>
+      </ul>
+      <p class="imza">Web Danışmanı (webdanismani.com) tarafından geliştirilmiştir · Destek: oblifex.com</p>
+    </div>
+  </div>
+</div>
+<script src="/ortak.js"></script>
+<script src="/ekran.js"></script>
+</body>
+</html>

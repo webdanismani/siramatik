@@ -1,0 +1,19 @@
+# Çalışma anı verisi (her kurulumun kendi durumu)
+veri.json
+veri.json.*
+
+# Üretilen dosyalar (tv-hazirla.py ve paketle.py çıktıları)
+tv-uygulamasi/
+dist/
+*.wgt
+*.ipk
+
+# Python
+__pycache__/
+*.pyc
+
+# Editör / sistem
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

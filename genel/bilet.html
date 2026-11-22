@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Numara Al</title>
+<style>
+  :root {
+    --zemin: #f4f6fb; --yuzey: #fff; --metin: #0f172a; --soluk: #64748b; --cizgi: #e3e8f0;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --zemin: #0b1120; --yuzey: #111a2e; --metin: #e6ebf5; --soluk: #8b98b3; --cizgi: #22304b; color-scheme: dark; }
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; min-height: 100%; }
+  body {
+    background: var(--zemin); color: var(--metin);
+    font-family: "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+    display: flex; flex-direction: column; min-height: 100vh;
+    -webkit-user-select: none; user-select: none;
+  }
+  header { text-align: center; padding: 40px 16px 10px; }
+  header h1 { margin: 0; font-size: clamp(28px, 5vw, 48px); letter-spacing: -.5px; }
+  header p { margin: 8px 0 0; color: var(--soluk); font-size: clamp(16px, 2.4vw, 22px); }
+  main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 24px 16px 40px; }
+  .dugmeler { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; width: 100%; max-width: 1100px; }
+  .hizmet-dugme {
+    flex: 1 1 280px; max-width: 520px; min-height: 160px;
+    border: 0; border-radius: 28px; color: #fff; cursor: pointer; font: inherit;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+    padding: 24px; box-shadow: 0 12px 30px rgba(15, 23, 42, .18);
+    -webkit-transition: -webkit-transform .08s; transition: transform .08s, filter .15s;
+  }
+  .hizmet-dugme:active { -webkit-transform: scale(.98); transform: scale(.98); filter: brightness(.92); }
+  .hizmet-dugme:disabled { opacity: .6; }
+  .hd-ad { font-size: clamp(24px, 3.4vw, 36px); font-weight: 800; }
+  .hd-bilgi { font-size: 17px; opacity: .9; }
+  .bos { color: var(--soluk); font-size: 20px; }
+
+  .bilet-katman {
+    position: fixed; left: 0; top: 0; right: 0; bottom: 0; background: rgba(2, 6, 23, .6);
+    display: flex; align-items: center; justify-content: center; padding: 16px;
+  }
+  .bilet {
+    width: 100%; max-width: 440px; background: var(--yuzey); color: var(--metin);
+    border-radius: 28px; padding: 36px 30px 28px; text-align: center;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, .35);
+  }
+  .b-isletme { font-weight: 700; color: var(--soluk); }
+  .b-etiket { margin-top: 18px; font-size: 15px; letter-spacing: 4px; color: var(--soluk); font-weight: 700; }
+  .b-numara { font-size: 104px; font-weight: 800; line-height: 1.05; letter-spacing: -3px; margin: 4px 0; }
+  .b-hizmet { font-size: 20px; font-weight: 700; }
+  .b-onunuzde { margin: 18px 0 6px; font-size: 18px; }
+  .b-onunuzde b { font-size: 24px; }
+  .b-zaman { color: var(--soluk); font-size: 14px; }
+  .b-dugmeler { display: flex; gap: 10px; margin-top: 24px; }
+  .b-dugmeler button {
+    flex: 1; font: inherit; font-weight: 700; font-size: 17px; padding: 14px; border-radius: 14px; cursor: pointer;
+    border: 1px solid var(--cizgi); background: var(--zemin); color: var(--metin);
+  }
+  .b-dugmeler button.ana { background: #2563eb; border-color: #2563eb; color: #fff; }
+  .b-geri { margin-top: 12px; font-size: 13px; color: var(--soluk); }
+  .gizli { display: none !important; }
+  .hata { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); background: #b91c1c; color: #fff; padding: 12px 20px; border-radius: 12px; font-weight: 700; }
+
+  @media print {
+    @page { size: 80mm auto; margin: 4mm; }
+    body { background: #fff; min-height: 0; }
+    header, main, .b-dugmeler, .b-geri, .hata { display: none !important; }
+    .bilet-katman { position: static; background: none; padding: 0; }
+    .bilet { box-shadow: none; max-width: none; padding: 0; color: #000; background: #fff; }
+    .b-numara { font-size: 56pt; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1 id="isletme">Hoş geldiniz</h1>
+  <p>İşleminizi seçin, sıra numaranızı alın</p>
+</header>
+<main><div id="dugmeler" class="dugmeler"><p class="bos">Yükleniyor…</p></div></main>
+
+<div id="katman" class="bilet-katman gizli">
+  <div class="bilet" role="dialog" aria-live="assertive">
+    <div class="b-isletme" id="b-isletme"></div>
+    <div class="b-etiket">SIRA NUMARANIZ</div>
+    <div class="b-numara" id="b-numara">—</div>
+    <div class="b-hizmet" id="b-hizmet"></div>
+    <div class="b-onunuzde" id="b-onunuzde"></div>
+    <div class="b-zaman" id="b-zaman"></div>
+    <div class="b-dugmeler">
+      <button type="button" id="yazdir">Yazdır</button>
+      <button type="button" class="ana" id="tamam">Tamam</button>
+    </div>
+    <div class="b-geri" id="b-geri"></div>
+  </div>
+</div>
+<div id="hata" class="hata gizli"></div>
+
+<script src="/ortak.js"></script>
+<script>
+(function () {
+  'use strict';
+  var durum = null, imza = '', geriZaman = null, sayac = 0, hataZaman = null, bekliyor = false;
+  var otomatikYazdir = /[?&]yazdir=1/.test(location.search); // fiş yazıcılı kiosk için
+
+  function $(id) { return document.getElementById(id); }
+  function hataGoster(m) {
+    var h = $('hata'); h.textContent = m; h.className = 'hata';
+    clearTimeout(hataZaman); hataZaman = setTimeout(function () { h.className = 'hata gizli'; }, 3500);
+  }
+
+  function ciz() {
+    Sira.yaz('isletme', durum.ayarlar.isletme || 'Hoş geldiniz');
+    document.title = 'Numara Al — ' + (durum.ayarlar.isletme || 'Sıramatik');
+    var yeni = JSON.stringify(durum.hizmetler.map(function (h) { return [h.kod, h.ad, h.renk]; }));
+    var kap = $('dugmeler');
+    if (yeni !== imza) {
+      imza = yeni;
+      kap.innerHTML = '';
+      durum.hizmetler.forEach(function (h) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'hizmet-dugme';
+        b.style.background = h.renk;
+        b.setAttribute('data-kod', h.kod);
+        var ad = document.createElement('span'); ad.className = 'hd-ad'; ad.textContent = h.ad;
+        var bilgi = document.createElement('span'); bilgi.className = 'hd-bilgi';
+        b.appendChild(ad); b.appendChild(bilgi);
+        b.onclick = function () { biletAl(h.kod); };
+        kap.appendChild(b);
+      });
+      if (!durum.hizmetler.length) kap.innerHTML = '<p class="bos">Şu an numara verilmiyor.</p>';
+    }
+    durum.hizmetler.forEach(function (h) {
+      var b = kap.querySelector('[data-kod="' + h.kod + '"]');
+      if (!b) return;
+      var n = Math.max(0, h.son_bilet - h.son_cagri);
+      b.querySelector('.hd-bilgi').textContent = n ? n + ' kişi bekliyor' : 'Bekleyen yok';
+    });
+  }
+
+  function biletAl(kod) {
+    if (bekliyor) return;
+    bekliyor = true;
+    Sira.islem('bilet', { hizmet: kod }, function (hata, b) {
+      bekliyor = false;
+      if (hata) { hataGoster(hata); return; }
+      Sira.yaz('b-isletme', durum ? durum.ayarlar.isletme : '');
+      Sira.yaz('b-numara', b.numara);
+      Sira.yaz('b-hizmet', b.hizmet_ad);
+      $('b-onunuzde').innerHTML = b.onunuzde > 0
+        ? 'Önünüzde <b>' + b.onunuzde + '</b> kişi var'
+        : '<b>Sıradaki sizsiniz!</b>';
+      var d = new Date(b.zaman * 1000);
+      Sira.yaz('b-zaman', d.toLocaleDateString('tr-TR') + ' ' + Sira.saatMetni(b.zaman));
+      $('katman').className = 'bilet-katman';
+      if (otomatikYazdir) setTimeout(function () { window.print(); }, 200);
+      geriSayim(10);
+    });
+  }
+
+  function geriSayim(sn) {
+    clearInterval(geriZaman);
+    sayac = sn;
+    Sira.yaz('b-geri', sayac + ' saniye içinde ana ekrana dönülecek');
+    geriZaman = setInterval(function () {
+      sayac--;
+      if (sayac <= 0) { kapat(); return; }
+      Sira.yaz('b-geri', sayac + ' saniye içinde ana ekrana dönülecek');
+    }, 1000);
+  }
+
+  function kapat() { clearInterval(geriZaman); $('katman').className = 'bilet-katman gizli'; }
+
+  $('tamam').onclick = kapat;
+  $('yazdir').onclick = function () { window.print(); };
+
+  Sira.baglan(function (d) { durum = d; ciz(); }, function (bagli) {
+    if (!bagli) hataGoster('Sunucuya bağlanılamıyor…');
+  });
+})();
+</script>
+</body>
+</html>
